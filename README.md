@@ -1,5 +1,16 @@
 ## 🌐 Terraform Template for Microsoft Purview and Data Lake Environment
 
+### 📝 Description
+
+This repository contains a Terraform template designed to automate the deployment of a Microsoft Purview and Data Lake environment in Azure. By using this template, you can quickly provision and configure all the necessary Azure resources, saving you time and reducing the possibility of manual errors. This is particularly useful for organizations that require a robust and secure data governance and data lake solution but want to minimize the operational overhead.
+
+### 🎯 Why Use This Repository?
+
+- 🚀 **Quick Deployment**: Get your Purview and Data Lake environment up and running in minutes.
+- 🛡 **Consistency**: Ensure that all deployments follow the same configuration, reducing inconsistencies.
+- 📚 **Documentation**: Each component and its purpose are well-documented, making it easier to understand what is being deployed.
+- 🔄 **Reusability**: The template can be reused across different environments and Azure subscriptions.
+
 ### 📋 Prerequisites
 
 - 🌟 An active [Azure subscription](https://azure.microsoft.com/en-us/free/).
