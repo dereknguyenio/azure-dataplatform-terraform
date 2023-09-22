@@ -1,0 +1,96 @@
+provider "azurerm" {
+  features {}
+  skip_provider_registration = true
+}
+
+locals {
+  deploy_namespace = "purviewtf"
+  environment      = "dev"
+  deployment_id    = substr(md5(timestamp()), 0, 5)
+}
+
+data "azurerm_client_config" "client_config" {}
+
+resource "azurerm_resource_group" "resource_group" {
+  name     = "${local.deploy_namespace}-rg-${local.environment}"
+  location = "eastus"
+}
+
+resource "azurerm_user_assigned_identity" "managed_identity" {
+  name                = "${local.deploy_namespace}-ManagedIdentity-${local.environment}-${local.deployment_id}"
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = azurerm_resource_group.resource_group.location
+}
+
+resource "azurerm_role_assignment" "role_assignment" {
+  principal_id   = azurerm_user_assigned_identity.managed_identity.principal_id
+  role_definition_name = "Owner"
+  scope          = azurerm_resource_group.resource_group.id
+}
+
+resource "azurerm_key_vault" "key_vault" {
+  name                = "${lower(replace(local.deploy_namespace, "_", "-"))}-kv-${local.environment}-${local.deployment_id}"
+  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+  sku_name            = "standard"
+  tenant_id           = data.azurerm_client_config.client_config.tenant_id
+
+  tags = {
+    Environment = local.environment
+  }
+}
+
+resource "azurerm_storage_account" "storage_account" {
+  name                     = "${lower(substr(local.deploy_namespace, 0, 11))}st${substr(lower(local.environment), 0, 3)}${local.deployment_id}"
+  resource_group_name      = azurerm_resource_group.resource_group.name
+  location                 = azurerm_resource_group.resource_group.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  is_hns_enabled           = true
+
+  tags = {
+    Environment = local.environment
+  }
+}
+
+resource "azurerm_storage_container" "bronze_container" {
+  name                  = "bronze"
+  storage_account_name  = azurerm_storage_account.storage_account.name
+  container_access_type = "private"
+}
+
+resource "azurerm_storage_container" "silver_container" {
+  name                  = "silver"
+  storage_account_name  = azurerm_storage_account.storage_account.name
+  container_access_type = "private"
+}
+
+resource "azurerm_storage_container" "gold_container" {
+  name                  = "gold"
+  storage_account_name  = azurerm_storage_account.storage_account.name
+  container_access_type = "private"
+}
+
+resource "azurerm_data_factory" "data_factory" {
+  name                = "${local.deploy_namespace}-DataFactory-${local.environment}-${local.deployment_id}"
+  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+
+  tags = {
+    Environment = local.environment
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
+resource "azurerm_purview_account" "purview_account" {
+  name                = "${local.deploy_namespace}-Purview-${local.environment}-${local.deployment_id}"
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = "westeurope"
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
