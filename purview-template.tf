@@ -14,7 +14,18 @@ data "azurerm_client_config" "client_config" {}
 resource "azurerm_resource_group" "resource_group" {
   name     = "${local.deploy_namespace}-rg-${local.environment}"
   location = "eastus"
+
+  tags = {
+    "Description"   = "Example: Resource group for Purview and Data Lake environment (Modify as needed)"
+    "Environment"   = "Example: ${local.environment} (Modify as needed)"
+    "Owner"         = "Example: YourTeamNameHere (Modify as needed)"
+    "CostCenter"    = "Example: 1234 (Modify as needed)"
+    "Project"       = "Example: ProjectX (Modify as needed)"
+    "GitHubLink"    = "Example: https://github.com/dereknguyenio/purview-terraform (Modify as needed)"
+    "ManagedBy"     = "Example: Terraform (Modify as needed)"
+  }
 }
+
 
 resource "azurerm_user_assigned_identity" "managed_identity" {
   name                = "${local.deploy_namespace}-ManagedIdentity-${local.environment}-${local.deployment_id}"
