@@ -11,6 +11,10 @@ This repository contains a Terraform template designed to automate the deploymen
 - 📚 **Documentation**: Each component and its purpose are well-documented, making it easier to understand what is being deployed.
 - 🔄 **Reusability**: The template can be reused across different environments and Azure subscriptions.
 
+### 🏗 Architecture
+
+![Architecture Diagram](./architecture.png)
+
 ### 📋 Prerequisites
 
 - 🌟 An active [Azure subscription](https://azure.microsoft.com/en-us/free/).
