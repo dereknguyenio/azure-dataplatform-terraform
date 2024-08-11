@@ -1,9 +1,9 @@
 resource "azurerm_databricks_workspace" "databricks_workspace" {
-  name                                                = "${var.deploy_namespace}-databricks-${var.environment}-${var.deployment_id}-westus"
+  name                                                = "${var.deploy_namespace}-databricks-${var.environment}-${var.deployment_id}-wus"
   resource_group_name                                 = var.resource_group_name
   location                                            = "westus"
   sku                                                 = var.sku
-  managed_resource_group_name                         = "rg-${var.deploy_namespace}-adb-managed-${var.deployment_id}-westus"
+  managed_resource_group_name                         = "rg-${var.deploy_namespace}-adb-managed-${var.deployment_id}-wus"
   infrastructure_encryption_enabled                   = var.infrastructure_encryption_enabled
   customer_managed_key_enabled                        = var.customer_managed_key_enabled
   public_network_access_enabled                       = var.public_network_access_enabled
