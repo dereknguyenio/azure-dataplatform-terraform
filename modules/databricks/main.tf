@@ -1,5 +1,5 @@
 resource "azurerm_databricks_workspace" "databricks_workspace" {
-  name                                                = "${var.deploy_namespace}-databricks-${var.environment}-${var.deployment_id}"
+  name                                                = "${var.deploy_namespace}-databricks-${var.environment}-${var.deployment_id}-westus"
   resource_group_name                                 = var.resource_group_name
   location                                            = "westus"
   sku                                                 = var.sku
